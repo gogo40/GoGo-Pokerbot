@@ -16,9 +16,9 @@
 # limitations under the License.
 
 #
-# Sandbox
+# h power calculator
 #
-# This script is used to test some features before integrate with the Robot
+# A very simple heuristic to evaluate the hand quality
 
 # Ranks:
 # c = copas
@@ -82,11 +82,11 @@ print "Board> "
 print board_
 print "---------------------------------------"
 
-time_start = timeit()
+time_start = timeit.default_timer()
 
 result_ = pe.poker_eval(game=game_, pockets=pockets_, dead=dead_, board=board_, iterations=iterations_)
 
-time_end = timeit()
+time_end = timeit.default_timer()
 
 total_ = 0.0
 ev_ = []
