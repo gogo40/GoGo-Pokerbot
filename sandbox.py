@@ -91,14 +91,14 @@ print player_hand_
 
 print "---------------------------------------"
 n_known_cards_ = input("Number of known hands> ")
-for i in range(1, n_known_cards_):
+for i in range(1, n_known_cards_ + 1):
     c1 = raw_input("\t(%d) CARD1>" % (i))
     c2 = raw_input("\t(%d) CARD2>" % (i))
     print "\n"
     pockets_.append([c1, c2])
 
 
-for i in range(n_known_cards_, n_players_):
+for i in range(n_known_cards_ + 1, n_players_):
     pockets_.append(["__", "__"])
 
 print "Pockets> "
