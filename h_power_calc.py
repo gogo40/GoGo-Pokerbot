@@ -70,13 +70,47 @@ def h_power_calc(result_):
 
     return (P, H, threshold_)
 #######################################
+def read_raw_data(msg):
+    v = 0
+    while True:
+        try:
+            v = raw_input(msg)
+            break
+        except:
+            print "Invalid input!"
+    return v
+
+#######################################
+def read_data(msg):
+    v = 0
+    while True:
+        try:
+            v = input(msg)
+            break
+        except:
+            print "Invalid input!"
+    return v
+############################################
+def read_card(msg):
+    cn = -1
+    c = ""
+    while True:
+        try:
+            c = read_raw_data(msg)
+            cn = pe.string2card(c)
+            break
+        except:
+            print c," isn't a card!"
+    return c
+############################################
+
 
 
 print "deck =  %s\n" % pe.card2string(pe.deck())
 
 print "---------------------------------------"
-n_players_ = input("N players> ")
-big_blind_ = input("Big Blind> ")
+n_players_ = read_data("N players> ")
+big_blind_ = read_data("Big Blind> ")
 
 print "---------------------------------------"
 print "cards> 2, ... , 9, T, J, Q, K, A"
@@ -84,7 +118,7 @@ print "ranks> %s" % ranks_
 
 player_hand_ = []
 for i in range(1, 3):
-    player_hand_.append(raw_input("Player card %d> " % (i)))
+    player_hand_.append(read_card("Player card %d> " % (i)))
 pockets_ = [player_hand_]
 
 print player_hand_
@@ -92,8 +126,8 @@ print player_hand_
 print "---------------------------------------"
 n_known_cards_ = input("Number of known hands> ")
 for i in range(1, n_known_cards_ + 1):
-    c1 = raw_input("\t(%d) CARD1>" % (i))
-    c2 = raw_input("\t(%d) CARD2>" % (i))
+    c1 = read_card("\t(%d) CARD1>" % (i))
+    c2 = read_card("\t(%d) CARD2>" % (i))
     print "\n"
     pockets_.append([c1, c2])
 
@@ -101,41 +135,54 @@ for i in range(1, n_known_cards_ + 1):
 for i in range(n_known_cards_ + 1, n_players_):
     pockets_.append(["__", "__"])
 
+
 print "Pockets> "
 print pockets_
 
 print "---------------------------------------"
-board_ = []
 
 print "cards> 2, ... , 9, T, J, Q, K, A"
 print "ranks> %s" % ranks_
 
-n_known_cards_ = input("Number of known cards> ")
+known_board_ = []
 
-for i in range(1, n_known_cards_ + 1):
-    board_.append(raw_input("Board card %d> " % (i)))
+for n_known_cards_ in [0, 3, 1, 1]:
+    n = len(known_board_)
+    for i in range(1, n_known_cards_ + 1):
+        c = read_card("Board card %d> " % (n + i))
+        known_board_.append(c)
 
-for i in range(n_known_cards_, 5):
-    board_.append("__")
+    board_ = []
 
-print "Board> "
-print board_
-print "---------------------------------------"
+    for v in known_board_:
+        board_.append(v)
 
-time_start = timeit.default_timer()
+    for i in range(len(known_board_), 5):
+        board_.append("__")
 
-result_ = pe.poker_eval(game=game_, pockets=pockets_, dead=dead_, board=board_, iterations=iterations_)
+    print "Player hand> "
+    print player_hand_
+    print "Known Board> "
+    print known_board_
 
-time_end = timeit.default_timer()
+    print "Board> "
+    print board_
+    print "---------------------------------------"
+
+    time_start = timeit.default_timer()
+
+    result_ = pe.poker_eval(game=game_, pockets=pockets_, dead=dead_, board=board_, iterations=iterations_)
+
+    time_end = timeit.default_timer()
 
 
-(P, H, threshold) = h_power_calc(result_)
+    (P, H, threshold) = h_power_calc(result_)
 
 
-print "Player win probability: P = %.02f" % P[0]
-print "Player power:  H = %.02f" % H[0]
-print "Threshold: threshold = %.02f" % threshold
-print "Big blind: %.02f" % big_blind_
-print "Bid: %.02f" % (big_blind_ * H[0])
+    print "Player win probability: P = %.02f" % P[0]
+    print "Player power:  H = %.02f" % H[0]
+    print "Threshold: threshold = %.02f" % threshold
+    print "Big blind: %.02f" % big_blind_
+    print "Bid: %.02f" % (big_blind_ * H[0])
 
-print "Processing time elapsed: %.06f s" % (time_end - time_start)
+    print "Processing time elapsed: %.06f s" % (time_end - time_start)
