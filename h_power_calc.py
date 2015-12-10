@@ -91,7 +91,7 @@ print player_hand_
 
 print "---------------------------------------"
 n_known_cards_ = input("Number of known hands> ")
-for i in range(1, n_known_cards_ + 1):
+for i in range(1, n_known_cards_):
     c1 = input("\t(%d) CARD1>" % (i))
     c2 = input("\t(%d) CARD2>" % (i))
     print "\n"
