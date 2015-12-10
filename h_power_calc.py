@@ -90,7 +90,15 @@ pockets_ = [player_hand_]
 print player_hand_
 
 print "---------------------------------------"
-for i in range(1, n_players_):
+n_known_cards_ = input("Number of known hands> ")
+for i in range(1, n_known_cards_ + 1):
+    c1 = input("\t(%d) CARD1>" % (i))
+    c2 = input("\t(%d) CARD2>" % (i))
+    print "\n"
+    pockets_.append([c1, c2])
+
+
+for i in range(n_known_cards_, n_players_):
     pockets_.append(["__", "__"])
 
 print "Pockets> "
@@ -102,8 +110,13 @@ board_ = []
 print "cards> 2, ... , 9, T, J, Q, K, A"
 print "ranks> %s" % ranks_
 
-for i in range(1, 6):
+n_known_cards_ = input("Number of known cards> ")
+
+for i in range(1, n_known_cards_ + 1):
     board_.append(input("Board card %d> " % (i)))
+
+for i in range(n_known_cards_, 5):
+    board_.append("__")
 
 print "Board> "
 print board_
