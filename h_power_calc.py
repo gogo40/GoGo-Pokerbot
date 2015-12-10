@@ -26,7 +26,7 @@
 # h = paus
 # d = ouros
 
-#Values:
+# Values:
 # 2 .. 9
 # T = 10
 # J, Q, K, A
@@ -44,8 +44,9 @@ game_ = "holdem"
 iterations_ = 5000000
 dead_ = []
 
+
 #######################################
-#h_power calculator
+# h_power calculator
 def h_power_calc(result_):
     total_ = 0.0
     ev_ = []
@@ -69,6 +70,8 @@ def h_power_calc(result_):
         id = id + 1
 
     return (P, H, threshold_)
+
+
 #######################################
 def read_raw_data(msg):
     v = 0
@@ -80,6 +83,7 @@ def read_raw_data(msg):
             print "Invalid input!"
     return v
 
+
 #######################################
 def read_data(msg):
     v = 0
@@ -90,6 +94,8 @@ def read_data(msg):
         except:
             print "Invalid input!"
     return v
+
+
 ############################################
 def read_card(msg):
     cn = -1
@@ -100,8 +106,10 @@ def read_card(msg):
             cn = pe.string2card(c)
             break
         except:
-            print c," isn't a card!"
+            print c, " isn't a card!"
     return c
+
+
 ############################################
 
 
@@ -131,10 +139,8 @@ for i in range(1, n_known_cards_ + 1):
     print "\n"
     pockets_.append([c1, c2])
 
-
 for i in range(n_known_cards_ + 1, n_players_):
     pockets_.append(["__", "__"])
-
 
 print "Pockets> "
 print pockets_
@@ -175,9 +181,7 @@ for n_known_cards_ in [0, 3, 1, 1]:
 
     time_end = timeit.default_timer()
 
-
     (P, H, threshold) = h_power_calc(result_)
-
 
     print "Player win probability: P = %.02f" % P[0]
     print "Player power:  H = %.02f" % H[0]
