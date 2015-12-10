@@ -31,9 +31,8 @@
 # T = 10
 # J, Q, K, A
 # Unknown = __
-
+import timeit
 from pokereval import PokerEval
-from timeit import timeit
 
 __author__ = 'gogo40'
 
@@ -42,28 +41,64 @@ pe = PokerEval()
 ranks_ = ["h", "c", "d", "s"]
 
 game_ = "holdem"
-iterations_ = 10000000
+iterations_ = 5000000
 dead_ = []
+
+#######################################
+#h_power calculator
+def h_power_calc(result_):
+    total_ = 0.0
+    ev_ = []
+    for r in result_['eval']:
+        v = float(r['ev'])
+        ev_.append(v)
+        total_ = total_ + v
+    threshold_ = 100.0 / n_players_
+    id = 1
+    P = []
+    H = []
+    for e in ev_:
+        p = (100.0 * e) / total_
+        h = p / threshold_
+        print "p[%d] = %.02f%%" % (id, p)
+        print "H[%d] = %.02f" % (id, h)
+
+        P.append(p)
+        H.append(h)
+
+        id = id + 1
+
+    return (P, H, threshold_)
+#######################################
+
 
 print "deck =  %s\n" % pe.card2string(pe.deck())
 
 print "---------------------------------------"
 n_players_ = input("N players> ")
-print n_players_
-print "---------------------------------------"
+big_blind_ = input("Big Blind> ")
 
+print "---------------------------------------"
 print "cards> 2, ... , 9, T, J, Q, K, A"
 print "ranks> %s" % ranks_
 
 player_hand_ = []
 for i in range(1, 3):
-    player_hand_.append(input("Player card %d> " % (i)))
+    player_hand_.append(raw_input("Player card %d> " % (i)))
 pockets_ = [player_hand_]
 
 print player_hand_
 
 print "---------------------------------------"
-for i in range(1, n_players_):
+n_known_cards_ = input("Number of known hands> ")
+for i in range(1, n_known_cards_):
+    c1 = raw_input("\t(%d) CARD1>" % (i))
+    c2 = raw_input("\t(%d) CARD2>" % (i))
+    print "\n"
+    pockets_.append([c1, c2])
+
+
+for i in range(n_known_cards_, n_players_):
     pockets_.append(["__", "__"])
 
 print "Pockets> "
@@ -75,8 +110,13 @@ board_ = []
 print "cards> 2, ... , 9, T, J, Q, K, A"
 print "ranks> %s" % ranks_
 
-for i in range(1, 6):
-    board_.append(input("Board card %d> " % (i)))
+n_known_cards_ = input("Number of known cards> ")
+
+for i in range(1, n_known_cards_ + 1):
+    board_.append(raw_input("Board card %d> " % (i)))
+
+for i in range(n_known_cards_, 5):
+    board_.append("__")
 
 print "Board> "
 print board_
@@ -88,34 +128,14 @@ result_ = pe.poker_eval(game=game_, pockets=pockets_, dead=dead_, board=board_, 
 
 time_end = timeit.default_timer()
 
-total_ = 0.0
-ev_ = []
-for r in result_['eval']:
-    v = float(r['ev'])
-    ev_.append(v)
-    total_ = total_ + v
 
-threshold_ = 100.0 / n_players_
-print threshold_
-
-id = 1
-
-P = []
-H = []
-
-for e in ev_:
-    p = (100.0 *  e) / total_
-    h = p / threshold_
-    print "p[%d] = %.02f%%" % (id, p)
-    print "H[%d] = %.02f" % (id, h)
-
-    P.append(p)
-    H.append(h)
-
-    id = id + 1
+(P, H, threshold) = h_power_calc(result_)
 
 
 print "Player win probability: P = %.02f" % P[0]
 print "Player power:  H = %.02f" % H[0]
+print "Threshold: threshold = %.02f" % threshold
+print "Big blind: %.02f" % big_blind_
+print "Bid: %.02f" % (big_blind_ * H[0])
 
 print "Processing time elapsed: %.06f s" % (time_end - time_start)
